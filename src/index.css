@@ -7,13 +7,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000;
+    --background: #050b20;
     --foreground: #fff
   }
 }
 
 @theme inline {
-  --font-nunito: "Nunito", sans-serif;
+  --font-nunito: "Nunito", sans-serif;  
   --font-quicksand: "Quicksand", sans-serif;
 }
 
