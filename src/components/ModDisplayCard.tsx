@@ -25,7 +25,7 @@ function ModDisplayCard({ mod, index = 0 }: Props) {
         <p className="font-quicksand font-bold text-white text-lg leading-tight truncate">
           {mod.title}
         </p>
-        <p className="font-quicksand text-[#4f65ae] text-sm truncate">
+        <p className="font-quicksand text-[#4f65ae] text-wrap text-sm truncate">
           {mod.description}
         </p>
         <div className="flex items-center text-xs gap-1.5 mt-1 text-[#3d4f8a]">
