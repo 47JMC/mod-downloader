@@ -187,8 +187,8 @@ function SearchBox({ onResults }: { onResults?: (results: Mod[]) => void }) {
               className="mt-2 bg-[#0a1235] overflow-auto border border-[#1a2760] rounded-xl shadow-2xl p-3 text-sm text-[#4a5fad] font-quicksand"
             >
               {results.length > 0 ? (
-                results.map((mod) => (
-                  <ModDisplayCard key={mod.slug} mod={mod} />
+                results.map((mod, i) => (
+                  <ModDisplayCard key={mod.slug} mod={mod} index={i} />
                 ))
               ) : (
                 <p className="px-2 py-1">
