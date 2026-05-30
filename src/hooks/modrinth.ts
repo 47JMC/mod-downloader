@@ -7,20 +7,29 @@ export type Mod = {
   description: string;
   categories: string[];
   downloads: number;
-  iconUrl: string;
+  icon_url: string;
   author: string;
 };
 
-export async function searchMods(query: string) {
-  const response = await fetch(
-    `${API_BASE_URL}/search?query=${encodeURIComponent(query)}`,
-    { headers: { "User-Agent": USER_AGENT } },
-  );
+export async function searchMods(query: string, version: string) {
+  const facets = JSON.stringify([
+    [`versions:${version}`],
+    [`project_type:mod`],
+  ]);
+
+  const params = new URLSearchParams({
+    query,
+    facets,
+  });
+
+  const response = await fetch(`${API_BASE_URL}/search?${params}`, {
+    headers: { "User-Agent": USER_AGENT },
+  });
 
   const data = await response.json();
 
   if (!response.ok) {
-    console.log("Error searching mods:", data);
+    console.error("Error searching mods:", data);
     return { error: data.error, message: data.message };
   }
 

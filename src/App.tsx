@@ -1,15 +1,17 @@
+import { useState } from "react";
+import type { Mod } from "./hooks/modrinth";
+
+import SearchBox from "./components/SearchBox";
+
 function App() {
+  const [results, setResults] = useState<Mod[]>([]);
+
   return (
-    <div className="min-h-screen flex gap-15 flex-col justify-center items-center">
-      <p className="text-4xl font-nunito">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis
-        quis at non magnam accusamus nesciunt iusto porro, nisi, nostrum
-        asperiores repellendus ipsa atque.
-      </p>
-      <p className="text-4xl font-quicksand">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus quas
-        dolor laborum, libero quia assumenda.
-      </p>
+    <div className="min-h-screen flex flex-col items-center gap-4">
+      <h1 className="font-nunito font-extrabold m-4 text-4xl">
+        Mod Downloader
+      </h1>
+      <SearchBox onResults={setResults} />
     </div>
   );
 }
