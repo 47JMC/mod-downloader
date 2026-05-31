@@ -5,25 +5,35 @@ import { getGameVersions, getLoaders, type Mod } from "./hooks/modrinth";
 import SearchBox from "./components/SearchBox";
 import PresetsBar from "./components/PresetsBar";
 import ModDisplayCard from "./components/ModDisplayCard";
+import DownloadButton from "./components/DownloadButton";
 
 function App() {
   const [selectedPreset, setSelectedPreset] = useState<number>(0);
-  const [mods, setMods] = useState<Mod[]>([]);
+  const [mods, setMods] = useState<Mod[]>(() => {
+    const storedMods = localStorage.getItem("mods");
+    return storedMods ? JSON.parse(storedMods) : [];
+  });
+
+  const [version, setVersion] = useState(
+    () => localStorage.getItem("version") ?? "",
+  );
   const [versions, setVersions] = useState<string[]>([]);
-  const [version, setVersion] = useState("");
+
+  const [loader, setLoader] = useState<string | undefined>(
+    () => localStorage.getItem("loader") ?? undefined,
+  );
   const [loaders, setLoaders] = useState<{ icon: string; name: string }[]>([]);
-  const [loader, setLoader] = useState<string>();
 
   useEffect(() => {
     getGameVersions().then((v) => {
       setVersions(v);
-      setVersion(v[0]); // default to latest
+      if (!localStorage.getItem("version")) setVersion(v[0]);
     });
 
     getLoaders().then((l) => {
       setLoaders(l);
-      setLoader("fabric");
-    }); // default to first loader (probably forge)
+      if (!localStorage.getItem("loader")) setLoader("fabric");
+    });
   }, []);
 
   const handleModToggle = (mod: Mod) => {
@@ -31,15 +41,24 @@ function App() {
       (m) => m.slug === mod.slug && m.preset === selectedPreset,
     );
 
-    if (exists) {
-      setMods((prev) =>
-        prev.filter(
+    const newMods = exists
+      ? mods.filter(
           (m) => !(m.slug === mod.slug && m.preset === selectedPreset),
-        ),
-      );
-    } else {
-      setMods((prev) => [...prev, { ...mod, preset: selectedPreset }]);
-    }
+        )
+      : [...mods, { ...mod, preset: selectedPreset }];
+
+    setMods(newMods);
+    localStorage.setItem("mods", JSON.stringify(newMods));
+  };
+
+  const handleVersionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setVersion(e.target.value);
+    localStorage.setItem("version", e.target.value);
+  };
+
+  const handleLoaderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLoader(e.target.value);
+    localStorage.setItem("loader", e.target.value);
   };
 
   return (
@@ -58,7 +77,7 @@ function App() {
           <p>Game version</p>
           <select
             value={version}
-            onChange={(e) => setVersion(e.target.value)}
+            onChange={handleVersionChange}
             className="appearance-[base-select] bg-[#201672] outline-3 rounded-md outline-[#171055] font-quicksand text-white text-sm px-2 py-1"
           >
             {versions.map((val, i) => (
@@ -72,7 +91,7 @@ function App() {
           <p>Mod Loader</p>
           <select
             value={loader}
-            onChange={(e) => setLoader(e.target.value)}
+            onChange={handleLoaderChange}
             className="appearance-[base-select] bg-[#201672] outline-3 rounded-md outline-[#171055] font-quicksand text-white text-sm px-2 py-1"
           >
             {loaders.map((val, i) => (
@@ -88,6 +107,13 @@ function App() {
       <PresetsBar
         activePreset={selectedPreset}
         setActivePreset={setSelectedPreset}
+      />
+
+      <DownloadButton
+        preset={selectedPreset}
+        mods={mods}
+        loader={loader!}
+        version={version}
       />
 
       <div className="bg-[#1f0541] rounded-lg m-2 font-quicksand font-medium">

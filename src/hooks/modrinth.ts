@@ -1,6 +1,8 @@
 const API_BASE_URL = "https://api.modrinth.com/v2";
 const USER_AGENT = "ModDownloader/1.0";
 
+const WORKER_URL = import.meta.env.VITE_WORKER_URL;
+
 export type Mod = {
   slug: string;
   title: string;
@@ -92,4 +94,23 @@ export async function getDownloadLink(
   }
 
   return data[0].files[0].url;
+}
+
+export async function downloadModsAsZip(
+  mods: Mod[],
+  version: string,
+  loader: string,
+) {
+  const res = await fetch(WORKER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mods, version, loader }),
+  });
+
+  const blob = await res.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "mods.zip";
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
