@@ -5,30 +5,18 @@ import { searchMods, type Mod } from "../hooks/modrinth";
 
 import ModDisplayCard from "./ModDisplayCard";
 
-const GAME_VERSIONS = [
-  "26.2",
-  "26.1",
-  "1.21.11",
-  "1.21.10",
-  "1.21.9",
-  "1.21.8",
-  "1.21.7",
-  "1.21.6",
-  "1.21.5",
-  "1.21.4",
-];
-
 function SearchBox({
   onResults,
   handleModToggle,
+  version,
 }: {
   onResults?: (results: Mod[]) => void;
   handleModToggle: (mod: Mod) => void;
+  version?: string;
 }) {
   const [results, setResults] = useState<Mod[]>([]);
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState("");
-  const [version, setVersion] = useState(GAME_VERSIONS[0]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -59,7 +47,7 @@ function SearchBox({
         onResults?.([]);
         return;
       }
-      const data = await searchMods(value.trim(), version);
+      const data = await searchMods(value.trim(), version!);
       onResults?.(data.hits);
       setResults(data.hits);
       console.log(data);
@@ -154,21 +142,6 @@ function SearchBox({
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.15 }}
               >
-                <select
-                  name="gameVersionDropdown"
-                  className="appearance-auto bg-[#201672] outline-3 rounded-md outline-[#171055]"
-                  onChange={(e) => setVersion(e.target.value)}
-                >
-                  {GAME_VERSIONS.map((val, i) => (
-                    <option
-                      className="rounded-lg"
-                      value={val}
-                      key={`${val}-${i}`}
-                    >
-                      {val}
-                    </option>
-                  ))}
-                </select>
                 <button
                   onClick={() => setFocused(false)}
                   className="absolute -right-2.5 text-[#3d4f8a] hover:text-white transition-colors"

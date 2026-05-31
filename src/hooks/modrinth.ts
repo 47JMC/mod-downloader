@@ -36,3 +36,15 @@ export async function searchMods(query: string, version: string) {
 
   return data;
 }
+
+// In modrinth.ts
+export async function getGameVersions(): Promise<string[]> {
+  const response = await fetch("https://api.modrinth.com/v2/tag/game_version", {
+    headers: { "User-Agent": USER_AGENT },
+  });
+  const data = await response.json();
+  // Only return releases, not snapshots/alphas/betas
+  return data
+    .filter((v: { version_type: string }) => v.version_type === "release")
+    .map((v: { version: string }) => v.version);
+}
