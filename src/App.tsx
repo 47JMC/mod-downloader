@@ -47,7 +47,11 @@ function App() {
       <h1 className="font-nunito font-extrabold m-4 text-4xl">
         Mod Downloader
       </h1>
-      <SearchBox handleModToggle={handleModToggle} version={version} />
+      <SearchBox
+        handleModToggle={handleModToggle}
+        version={version}
+        loader={loader!}
+      />
 
       <div className="flex items-center gap-5">
         <div className="hidden md:flex flex-col gap-1">
@@ -86,7 +90,7 @@ function App() {
         setActivePreset={setSelectedPreset}
       />
 
-      <div className="bg-[#1f0541] rounded-lg m-2  font-quicksand font-medium">
+      <div className="bg-[#1f0541] rounded-lg m-2 font-quicksand font-medium">
         {mods
           .filter((mod) => mod.preset === selectedPreset)
           .map((mod) => (

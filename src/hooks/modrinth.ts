@@ -12,15 +12,21 @@ export type Mod = {
   preset?: number;
 };
 
-export async function searchMods(query: string, version: string) {
+export async function searchMods(
+  query: string,
+  version: string,
+  loader: string,
+) {
   const facets = JSON.stringify([
     [`versions:${version}`],
     [`project_type:mod`],
+    [`categories:${loader}`],
   ]);
 
   const params = new URLSearchParams({
     query,
     facets,
+    limit: "20",
   });
 
   const response = await fetch(`${API_BASE_URL}/search?${params}`, {

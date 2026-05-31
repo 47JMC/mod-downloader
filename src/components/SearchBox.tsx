@@ -9,10 +9,12 @@ function SearchBox({
   onResults,
   handleModToggle,
   version,
+  loader,
 }: {
   onResults?: (results: Mod[]) => void;
   handleModToggle: (mod: Mod) => void;
   version?: string;
+  loader: string;
 }) {
   const [results, setResults] = useState<Mod[]>([]);
   const [focused, setFocused] = useState(false);
@@ -47,7 +49,7 @@ function SearchBox({
         onResults?.([]);
         return;
       }
-      const data = await searchMods(value.trim(), version!);
+      const data = await searchMods(value.trim(), version!, loader);
       onResults?.(data.hits);
       setResults(data.hits);
       console.log(data);
@@ -163,7 +165,7 @@ function SearchBox({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15, delay: 0.05 }}
-              className="mt-2 bg-[#0a1235] overflow-auto border border-[#1a2760] rounded-xl shadow-2xl p-3 text-sm text-[#4a5fad] font-quicksand"
+              className="mt-2 bg-[#0a1235] max-h-[75vh] overflow-y-auto border border-[#1a2760] rounded-xl shadow-2xl p-3 text-sm text-[#4a5fad] font-quicksand"
             >
               {results.length > 0 ? (
                 results.map((mod, i) => (
