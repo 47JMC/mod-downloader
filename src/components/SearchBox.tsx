@@ -18,7 +18,13 @@ const GAME_VERSIONS = [
   "1.21.4",
 ];
 
-function SearchBox({ onResults }: { onResults?: (results: Mod[]) => void }) {
+function SearchBox({
+  onResults,
+  handleModToggle,
+}: {
+  onResults?: (results: Mod[]) => void;
+  handleModToggle: (mod: Mod) => void;
+}) {
   const [results, setResults] = useState<Mod[]>([]);
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState("");
@@ -188,7 +194,12 @@ function SearchBox({ onResults }: { onResults?: (results: Mod[]) => void }) {
             >
               {results.length > 0 ? (
                 results.map((mod, i) => (
-                  <ModDisplayCard key={mod.slug} mod={mod} index={i} />
+                  <ModDisplayCard
+                    key={mod.slug}
+                    mod={mod}
+                    index={i}
+                    handleModToggle={handleModToggle}
+                  />
                 ))
               ) : (
                 <p className="px-2 py-1">
