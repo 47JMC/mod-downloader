@@ -1,9 +1,14 @@
 import { motion } from "motion/react";
 import type { Mod } from "../hooks/modrinth";
 
-type Props = { mod: Mod; index?: number };
+type Props = {
+  mod: Mod;
+  index?: number;
+  handleModToggle: (mod: Mod) => void;
+  isAdded?: boolean;
+};
 
-function ModDisplayCard({ mod, index = 0 }: Props) {
+function ModDisplayCard({ mod, index = 0, handleModToggle, isAdded }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -42,14 +47,14 @@ function ModDisplayCard({ mod, index = 0 }: Props) {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="shrink-0 font-quicksand font-semibold text-sm px-4 py-2 rounded-xl
-          bg-[#031970] border-2 border-[#1a2f8a]
-          text-[#6b8cff] hover:text-green-400
-          hover:bg-[#05175e] hover:border-green-500/60
+        className={`shrink-0 font-quicksand font-semibold text-sm px-4 py-2 rounded-xl
+          ${isAdded ? "bg-amber-600 hover:bg-amber-700 border-red-700 hover:border-red-800" : "bg-[#031970] border-[#1a2f8a] text-[#6b8cff] hover:text-green-400 hover:bg-[#05175e] hover:border-green-500/60"}
+           border-2 
           transition-colors duration-200
-          shadow-[0_0_12px_rgba(3,25,112,0.4)] hover:shadow-[0_0_16px_rgba(74,222,128,0.15)]"
+          shadow-[0_0_12px_rgba(3,25,112,0.4)] hover:shadow-[0_0_16px_rgba(74,222,128,0.15)]`}
+        onClick={() => handleModToggle(mod)}
       >
-        Add +
+        {isAdded ? "Remove" : "Add"}
       </motion.button>
     </motion.div>
   );
