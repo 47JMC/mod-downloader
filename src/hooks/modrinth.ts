@@ -9,6 +9,7 @@ export type Mod = {
   downloads: number;
   icon_url: string;
   author: string;
+  preset?: number;
 };
 
 export async function searchMods(query: string, version: string) {
