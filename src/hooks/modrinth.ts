@@ -61,3 +61,35 @@ export async function getLoaders(): Promise<{ icon: string; name: string }[]> {
   const data = await response.json();
   return data;
 }
+
+export async function getDownloadLink(
+  modSlug: string,
+  version: string,
+  loader: string,
+) {
+  const params = new URLSearchParams({
+    loaders: loader,
+    game_versions: version,
+    include_changelog: "false",
+    version_type: "release",
+  });
+
+  const response = await fetch(
+    `${API_BASE_URL}/project/${modSlug}/version?${params}`,
+    {
+      headers: { "User-Agent": USER_AGENT },
+    },
+  );
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error("Error fetching mod version:", data);
+    return { error: data.error, message: data.message };
+  }
+
+  if (data.length === 0) {
+    return { error: "No compatible version found" };
+  }
+
+  return data[0].files[0].url;
+}
