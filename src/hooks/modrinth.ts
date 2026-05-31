@@ -37,7 +37,6 @@ export async function searchMods(query: string, version: string) {
   return data;
 }
 
-// In modrinth.ts
 export async function getGameVersions(): Promise<string[]> {
   const response = await fetch("https://api.modrinth.com/v2/tag/game_version", {
     headers: { "User-Agent": USER_AGENT },
@@ -47,4 +46,12 @@ export async function getGameVersions(): Promise<string[]> {
   return data
     .filter((v: { version_type: string }) => v.version_type === "release")
     .map((v: { version: string }) => v.version);
+}
+
+export async function getLoaders(): Promise<{ icon: string; name: string }[]> {
+  const response = await fetch("https://api.modrinth.com/v2/tag/loader", {
+    headers: { "User-Agent": USER_AGENT },
+  });
+  const data = await response.json();
+  return data;
 }

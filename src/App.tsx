@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getGameVersions, type Mod } from "./hooks/modrinth";
+import { getGameVersions, getLoaders, type Mod } from "./hooks/modrinth";
 
 import SearchBox from "./components/SearchBox";
 import PresetsBar from "./components/PresetsBar";
@@ -11,12 +11,19 @@ function App() {
   const [mods, setMods] = useState<Mod[]>([]);
   const [versions, setVersions] = useState<string[]>([]);
   const [version, setVersion] = useState("");
+  const [loaders, setLoaders] = useState<{ icon: string; name: string }[]>([]);
+  const [loader, setLoader] = useState<string>();
 
   useEffect(() => {
     getGameVersions().then((v) => {
       setVersions(v);
       setVersion(v[0]); // default to latest
     });
+
+    getLoaders().then((l) => {
+      setLoaders(l);
+      setLoader("fabric");
+    }); // default to first loader (probably forge)
   }, []);
 
   const handleModToggle = (mod: Mod) => {
@@ -42,17 +49,36 @@ function App() {
       </h1>
       <SearchBox handleModToggle={handleModToggle} version={version} />
 
-      <select
-        value={version}
-        onChange={(e) => setVersion(e.target.value)}
-        className="appearance-auto bg-[#201672] outline-3 rounded-md outline-[#171055] font-quicksand text-white text-sm px-2 py-1"
-      >
-        {versions.map((val, i) => (
-          <option value={val} key={`${val}-${i}`}>
-            {val}
-          </option>
-        ))}
-      </select>
+      <div className="flex items-center gap-5">
+        <div className="hidden md:flex flex-col gap-1">
+          <p>Game version</p>
+          <select
+            value={version}
+            onChange={(e) => setVersion(e.target.value)}
+            className="appearance-[base-select] bg-[#201672] outline-3 rounded-md outline-[#171055] font-quicksand text-white text-sm px-2 py-1"
+          >
+            {versions.map((val, i) => (
+              <option value={val} key={`${val}-${i}`}>
+                {val}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="hidden md:flex flex-col gap-1">
+          <p>Mod Loader</p>
+          <select
+            value={loader}
+            onChange={(e) => setLoader(e.target.value)}
+            className="appearance-[base-select] bg-[#201672] outline-3 rounded-md outline-[#171055] font-quicksand text-white text-sm px-2 py-1"
+          >
+            {loaders.map((val, i) => (
+              <option value={val.name} key={`${val.name}-${i}`}>
+                {val.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* Presets */}
       <PresetsBar
