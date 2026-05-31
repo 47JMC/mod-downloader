@@ -39,7 +39,9 @@ function ModDisplayCard({ mod, index = 0, handleModToggle, isAdded }: Props) {
             {mod.author}
           </span>
           <span className="text-[#1a2760]">·</span>
-          <span>{mod.downloads.toLocaleString()} downloads</span>
+          <span className="font-medium text-green-400">
+            {mod.downloads.toLocaleString()} downloads
+          </span>
         </div>
       </div>
 
