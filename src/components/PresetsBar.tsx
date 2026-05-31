@@ -9,7 +9,7 @@ type Props = {
 
 function PresetsBar({ activePreset, setActivePreset }: Props) {
   return (
-    <div className="flex font-nunito font-medium text-lg m-2 bg-[#07123B] rounded-2xl p-1 w-fit">
+    <div className="flex font-nunito font-medium text-lg m-2 bg-[#07123B] rounded-xl p-1 w-fit">
       {PRESETS.map((preset, i) => (
         <button
           key={preset}
