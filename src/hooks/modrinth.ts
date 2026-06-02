@@ -101,7 +101,7 @@ export async function downloadModsAsZip(
   version: string,
   loader: string,
 ) {
-  const res = await fetch(WORKER_URL, {
+  const res = await fetch(`${WORKER_URL}/download`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ mods, version, loader }),
