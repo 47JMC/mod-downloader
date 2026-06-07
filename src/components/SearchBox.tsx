@@ -6,15 +6,17 @@ import { searchMods, type Mod } from "../hooks/modrinth";
 import ModDisplayCard from "./ModDisplayCard";
 
 function SearchBox({
-  onResults,
   handleModToggle,
   version,
   loader,
+  mods,
+  selectedPreset,
 }: {
-  onResults?: (results: Mod[]) => void;
   handleModToggle: (mod: Mod) => void;
   version?: string;
   loader: string;
+  mods: Mod[];
+  selectedPreset: number;
 }) {
   const [results, setResults] = useState<Mod[]>([]);
   const [focused, setFocused] = useState(false);
@@ -46,11 +48,9 @@ function SearchBox({
     if (searchFn.current) clearTimeout(searchFn.current);
     searchFn.current = setTimeout(async () => {
       if (!value.trim()) {
-        onResults?.([]);
         return;
       }
       const data = await searchMods(value.trim(), version!, loader);
-      onResults?.(data.hits);
       setResults(data.hits);
       console.log(data);
     }, 400);
@@ -77,6 +77,9 @@ function SearchBox({
     width: Math.min(window.innerWidth * 0.9, 672),
     x: "-50%",
   };
+
+  const isModAdded = (mod: Mod) =>
+    mods.some((m) => m.slug === mod.slug && m.preset === selectedPreset);
 
   return (
     <>
@@ -174,6 +177,7 @@ function SearchBox({
                     mod={mod}
                     index={i}
                     handleModToggle={handleModToggle}
+                    isAdded={isModAdded(mod)}
                   />
                 ))
               ) : (

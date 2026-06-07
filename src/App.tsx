@@ -66,10 +66,13 @@ function App() {
       <h1 className="font-nunito font-extrabold m-4 text-4xl">
         Mod Downloader
       </h1>
+
       <SearchBox
         handleModToggle={handleModToggle}
         version={version}
         loader={loader!}
+        mods={mods}
+        selectedPreset={selectedPreset}
       />
 
       <div className="flex items-center gap-5">
